@@ -25,10 +25,6 @@ keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 keymap("n", "<C-n>", ":BufferLineCycleNext<CR>", opts)
 keymap("n", "<C-p>", ":BufferLineCyclePrev<CR>", opts)
 
--- Portal better jumplist
-keymap("n", "<leader>o", "<cmd>Portal jumplist backward<cr>", opts)
-keymap("n", "<leader>i", "<cmd>Portal jumplist forward<cr>", opts)
-
 -- Misc --
 keymap("n", "J", "mzJ`z", opts) -- Join next line and keep cursor in same place
 
