@@ -14,6 +14,9 @@ packer.startup(function(use)
   use "nvim-neorg/neorg"
   use "nvim-neorg/neorg-telescope" -- telescope integration
 
+  -- Terminal In Vim
+  use "akinsho/toggleterm.nvim"
+
   -- GH code reviewing
   use {
     'ldelossa/gh.nvim',

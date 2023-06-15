@@ -47,6 +47,11 @@ local mappings = {
   ["ni"] = { ":Telescope neorg insert_file_link<CR>", "Insert File Link" },
   ["nl"] = { ":Telescope neorg find_linkable<CR>", "Find Linkables" },
   ["nw"] = { ":Telescope neorg switch_workspace<CR>", "Switch workspaces" },
+
+  -- Toggle Term stuff (todo: open envs like pry, python, etc for scripting languages)
+  ["tt"] = {":ToggleTerm direction=float<CR>", "floating terminal"},
+  ["tp"] = {":TermExec direction=float cmd='python3' <CR>", "Open Python Shell"},
+
 }
 local vmappings = {
   ["/"] = { ":'<,'>CommentToggle<CR>", "Comment" },
