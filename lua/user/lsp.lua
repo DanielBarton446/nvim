@@ -30,3 +30,13 @@ lsp.set_preferences({
 })
 
 lsp.setup()
+
+
+-- need to set mapping that on Enter key, select auto completion
+local cmp = require('cmp')
+
+cmp.setup({
+  mapping = {
+    ['<CR>'] = cmp.mapping.confirm({select = false}),
+  }
+})
