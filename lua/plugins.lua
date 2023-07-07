@@ -7,6 +7,9 @@ end
 vim.cmd [[packadd packer.nvim]]
 packer.startup(function(use)
   use 'wbthomason/packer.nvim' -- Package Manager
+
+  -- VimBeGood
+  use 'ThePrimeagen/vim-be-good'
   -- Colorscheme
   use 'folke/tokyonight.nvim'
 
