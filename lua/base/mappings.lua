@@ -31,7 +31,6 @@ keymap("n", "J", "mzJ`z", opts) -- Join next line and keep cursor in same place
 keymap("n", "n", "nzzzv", opts) -- keep search terms in middle
 keymap("n", "N", "Nzzzv", opts) -- keep search terms in middle
 
-
 -- Visual --
 keymap("v", "K", ":m '<-2<CR>gv=gv", opts)
 keymap("v", "J", ":m '>+1<CR>gv=gv", opts)

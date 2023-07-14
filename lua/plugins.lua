@@ -20,10 +20,31 @@ packer.startup(function(use)
   -- Terminal In Vim
   use "akinsho/toggleterm.nvim"
 
+  -- Fancy Notifications
+  use 'rcarriga/nvim-notify'
+
   -- GH code reviewing
   use {
     'ldelossa/gh.nvim',
     requires = { { 'ldelossa/litee.nvim' } }
+  }
+
+  -- Github copilot
+  -- use "github/copilot.vim"
+  use {
+    "zbirenbaum/copilot.lua",
+    -- cmd = "Copilot",
+    -- event = "InsertEnter",
+    -- config = function()
+    --   require("copilot").setup({})
+    -- end,
+  }
+  use {
+    "zbirenbaum/copilot-cmp",
+    -- after = { "copilot.lua" },
+    -- config = function ()
+    --   require("copilot_cmp").setup()
+    -- end
   }
 
   -- Lualine
