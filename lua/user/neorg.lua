@@ -8,8 +8,10 @@ require('neorg').setup {
         workspaces = {
           work = "~/notes/work/",
           rust = "~/notes/rust/",
+          texas = "~/notes/texas/",
           vacation = "~/notes/vacation/",
-          osn = "~/notes/osn/"
+          osn = "~/notes/osn/",
+          personal_configs = "~/notes/personal_configs/"
         },
         -- index = "~/notes/index.norg"
       }
