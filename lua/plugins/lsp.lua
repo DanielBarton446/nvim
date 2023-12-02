@@ -4,10 +4,9 @@ return {
   event = "BufEnter",
   dependencies = {
     -- LSP
+    "VonHeikemen/lsp-zero.nvim",
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
-    "neovim/nvim-lspconfig",
-    "VonHeikemen/lsp-zero.nvim",
 
     -- Autocompletion
     { 'hrsh7th/nvim-cmp' },
@@ -23,21 +22,6 @@ return {
   },
 
   config = function()
-    -- Mason for installing language servers
-    require("mason").setup()
-
-    local servers = {
-      "lua_ls",
-      "pyright",
-      "bashls",
-      "rust_analyzer",
-    }
-
-    require("mason-lspconfig").setup {
-      ensure_installed = servers,
-      automatic_installation = true,
-    }
-
     -- LSP zero for formatting and actually attaching languag servers
     local lsp = require('lsp-zero')
     lsp.preset('recommended')
@@ -63,10 +47,7 @@ return {
       }
     })
 
-    lsp.setup()
-
     -- CMP stuff
-
     -- need to set mapping that on Enter key, select auto completion
     local cmp = require'cmp'
     local luasnip = require'luasnip'
@@ -114,6 +95,32 @@ return {
       }
     })
 
-  end,
+    lsp.setup()
+
+    -- Mason for installing language servers
+    require("mason").setup()
+
+    local servers = {
+      "lua_ls",
+      "pyright",
+      "bashls",
+      "rust_analyzer",
+    }
+
+    require("mason-lspconfig").setup {
+      ensure_installed = servers,
+      automatic_installation = true,
+    }
+
+
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    for _, ls in ipairs(servers) do
+      require("lspconfig")[ls].setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+    }
+    end
+
+  end
 
 }
