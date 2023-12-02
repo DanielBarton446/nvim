@@ -23,11 +23,11 @@ return {
 
   config = function()
     -- LSP zero for formatting and actually attaching languag servers
-    local lsp = require('lsp-zero')
-    lsp.preset('recommended')
+    local lsp_zero = require('lsp-zero')
+    lsp_zero.preset('recommended')
 
     -- Fix Undefined global 'vim'
-    lsp.configure('lua_ls', {
+    lsp_zero.configure('lua_ls', {
       settings = {
         Lua = {
           diagnostics = {
@@ -37,7 +37,7 @@ return {
       }
     })
 
-    lsp.set_preferences({
+    lsp_zero.set_preferences({
       suggest_lsp_servers = true,
       sign_icons = {
         error = " ",
@@ -95,7 +95,7 @@ return {
       }
     })
 
-    lsp.setup()
+    lsp_zero.setup()
 
     -- Mason for installing language servers
     require("mason").setup()
@@ -114,13 +114,13 @@ return {
 
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    local lspconfig = require('lspconfig')
     for _, ls in ipairs(servers) do
-      require("lspconfig")[ls].setup {
+      lspconfig[ls].setup {
         on_attach = on_attach,
         capabilities = capabilities,
     }
     end
-
   end
 
 }
