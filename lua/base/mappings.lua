@@ -27,8 +27,8 @@ keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
 -- Navigate buffers
-keymap("n", "<C-n>", ":BufferLineCycleNext<CR>", opts)
-keymap("n", "<C-p>", ":BufferLineCyclePrev<CR>", opts)
+keymap("n", "<C-n>", ":bn<CR>", opts)
+keymap("n", "<C-p>", ":bp<CR>", opts)
 
 -- Misc --
 keymap("n", "J", "mzJ`z", opts) -- Join next line and keep cursor in same place
