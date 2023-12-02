@@ -14,7 +14,7 @@ local options = {
   splitright = true, -- force all vertical splits to go to the right of current window
   termguicolors = true, -- set term gui colors (most terminals support this)
   undofile = true, -- enable persistent undo
-  updatetime = 300, -- faster completion (4000ms default)
+  updatetime = 100, -- faster completion (4000ms default)
   writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
   expandtab = true, -- convert tabs to spaces
   shiftwidth = 2, -- the number of spaces inserted for each indentation
@@ -25,6 +25,7 @@ local options = {
   numberwidth = 4, -- set number column width to 2 {default 4}
   signcolumn = "yes", -- always show the sign column, otherwise it would shift the text each time
   wrap = false, -- display lines as one long line
+  timeoutlen = 100, -- time to wait for a mapped sequence to complete (in milliseconds)
 }
 
 for k, v in pairs(options) do
