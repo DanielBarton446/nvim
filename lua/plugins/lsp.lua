@@ -102,9 +102,13 @@ return {
 
     local servers = {
       "lua_ls",
-      "pyright",
+      -- "pyright",
+      "pylsp",
       "bashls",
       "rust_analyzer",
+      "ocamllsp",
+      "eslint",
+      "tsserver",
     }
 
     require("mason-lspconfig").setup {

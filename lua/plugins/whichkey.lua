@@ -24,7 +24,13 @@ return {
       ["ee"] = { "<cmd>lua require('telescope.builtin').find_files({search_dirs = {'~/.config/nvim/'}})<cr>",
         "Search dotfiles" },
       ["a"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
+      ["ce"] = { "<cmd>Copilot enable<CR>", "Copilot Enable" },
+      ["cd"] = { "<cmd>Copilot disable<CR>", "Copilot Disable" },
+      ["ct"] = { "<cmd>TSContextToggle<CR>", "Toggle Context" },
       ["k"] = { ":lua vim.lsp.buf.hover()<CR>", "Hover (read docos)" },
+
+      ["E"] = { "<cmd>lua vim.diagnostic.enable()<cr>", "Enable Diagnostics" },
+      ["D"] = { "<cmd>lua vim.diagnostic.disable()<cr>", "Disable diagnostics" },
 
       ["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Definition" },
       ["gD"] = { "<cmd>lua vim.lsp.buf.type_definition()<cr>", "Type Definition" },

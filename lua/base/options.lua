@@ -2,6 +2,7 @@ vim.o.termguicolors = true
 
 local options = {
   autochdir = false,
+  colorcolumn = "80", -- add a vertical line at 80 columns
   clipboard = "unnamedplus", -- allows neovim to access the system clipboard
   cmdheight = 2, -- more space in the neovim command line for displaying messages
   hlsearch = true, -- highlight all matches on previous search pattern
