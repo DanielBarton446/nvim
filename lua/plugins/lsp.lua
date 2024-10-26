@@ -47,6 +47,12 @@ return {
       }
     })
 
+    vim.diagnostic.config({
+      virtual_text = {
+        prefix = '󰵙', -- Could be '●', '▎', 'x'
+      }
+    })
+
     -- CMP stuff
     -- need to set mapping that on Enter key, select auto completion
     local cmp = require'cmp'
@@ -109,6 +115,8 @@ return {
       "ocamllsp",
       "eslint",
       "tsserver",
+      "ltex",
+      "texlab"
     }
 
     require("mason-lspconfig").setup {
@@ -124,6 +132,15 @@ return {
         on_attach = on_attach,
         capabilities = capabilities,
     }
+
+    -- we need to setup clangd manually
+    lspconfig.clangd.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      cmd = { "clangd", "--enable-config" },
+      root_dir = lspconfig.util.root_pattern("compile_commands.json", ".clangd"),
+    }
+
     end
   end
 

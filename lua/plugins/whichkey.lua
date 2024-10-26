@@ -21,7 +21,7 @@ return {
     }
     local mappings = {
       ["/"] = { ":CommentToggle<CR>", "Comment" },
-      ["ee"] = { "<cmd>lua require('telescope.builtin').find_files({search_dirs = {'~/.config/nvim/'}})<cr>",
+      ["ee"] = { "<cmd>lua require('telescope.builtin').find_files({search_dirs = {'~/.config/'}})<cr>",
         "Search dotfiles" },
       ["a"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
       ["ce"] = { "<cmd>Copilot enable<CR>", "Copilot Enable" },
