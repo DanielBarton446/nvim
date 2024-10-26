@@ -114,7 +114,7 @@ return {
       "rust_analyzer",
       "ocamllsp",
       "eslint",
-      "tsserver",
+      "ts_ls",
       "ltex",
       "texlab"
     }
