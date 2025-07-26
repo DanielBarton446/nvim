@@ -55,19 +55,19 @@ return {
 
     -- CMP stuff
     -- need to set mapping that on Enter key, select auto completion
-    local cmp = require'cmp'
-    local luasnip = require'luasnip'
+    local cmp = require 'cmp'
+    local luasnip = require 'luasnip'
 
     -- copilot tab completion
     local has_words_before = function()
       if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-      return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
+      return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
     end
 
     cmp.setup({
       mapping = {
-        ['<CR>'] = cmp.mapping.confirm({select = false}),
+        ['<CR>'] = cmp.mapping.confirm({ select = false }),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
@@ -91,11 +91,11 @@ return {
       },
       sources = {
         -- copilot
-        { name = "copilot"},
+        { name = "copilot" },
         -- nvim lsp
-        { name = "nvim_lsp"},
-        { name = "path"},
-        { name = "luasnip"},
+        { name = "nvim_lsp" },
+        { name = "path" },
+        { name = "luasnip" },
 
         { name = "buffer" } -- use things locally if we can't get from an lsp source
       }
@@ -104,19 +104,23 @@ return {
     lsp_zero.setup()
 
     -- Mason for installing language servers
-    require("mason").setup()
+    require("mason").setup(
+    )
 
     local servers = {
       "lua_ls",
-      -- "pyright",
       "pylsp",
       "bashls",
+      "clangd",
       "rust_analyzer",
       "ocamllsp",
+      "gopls",
+      "gdscript",
       "eslint",
       "ts_ls",
       "ltex",
-      "texlab"
+      "texlab",
+      "html"
     }
 
     require("mason-lspconfig").setup {
@@ -124,15 +128,38 @@ return {
       automatic_installation = true,
     }
 
-
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
     local lspconfig = require('lspconfig')
     for _, ls in ipairs(servers) do
       lspconfig[ls].setup {
         on_attach = on_attach,
         capabilities = capabilities,
+      }
+    end
+    lspconfig.pylsp.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
     }
-
+    -- I guess we also need to manually setup tsserver?
+    lspconfig.ts_ls.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+    }
+    -- lets do tailwind too!
+    lspconfig.tailwindcss.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+    }
+    -- lets do gdscipt as well!
+    lspconfig.gdscript.setup {
+      -- Set tab size to 4 for GDScript files
+      on_attach = function(_client, bufnr)
+        vim.api.nvim_buf_set_option(bufnr, 'expandtab', true)
+        vim.api.nvim_buf_set_option(bufnr, 'shiftwidth', 4)
+        vim.api.nvim_buf_set_option(bufnr, 'softtabstop', 4)
+      end,
+      capabilities = capabilities,
+    }
     -- we need to setup clangd manually
     lspconfig.clangd.setup {
       on_attach = on_attach,
@@ -140,8 +167,25 @@ return {
       cmd = { "clangd", "--enable-config" },
       root_dir = lspconfig.util.root_pattern("compile_commands.json", ".clangd"),
     }
-
-    end
+    lspconfig.gopls.setup {
+      on_attach = function(_client, bufnr)
+        vim.api.nvim_buf_set_option(bufnr, 'expandtab', true)
+        vim.api.nvim_buf_set_option(bufnr, 'shiftwidth', 4)
+        vim.api.nvim_buf_set_option(bufnr, 'softtabstop', 4)
+      end,
+      capabilities = capabilities,
+    }
+    -- we need to setup rust manually:
+    lspconfig.rust_analyzer.setup {
+      on_attach = on_attach,
+      settings = {
+        ['rust-analyzer'] = {
+          diagnostics = {
+            enable = false,
+          },
+        }
+      }
+    }
   end
 
 }

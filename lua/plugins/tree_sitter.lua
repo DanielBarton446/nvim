@@ -23,6 +23,7 @@ return {
       "yaml",
       "css",
       "html",
+      "gdscript",
       "lua"
     },
     autotag = {
