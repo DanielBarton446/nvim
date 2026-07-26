@@ -1,191 +1,123 @@
 return {
-  -- LSP
   "neovim/nvim-lspconfig",
   event = "BufEnter",
+
   dependencies = {
-    -- LSP
-    "VonHeikemen/lsp-zero.nvim",
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
 
-    -- Autocompletion
-    { 'hrsh7th/nvim-cmp' },
-    { 'hrsh7th/cmp-buffer' },
-    { 'hrsh7th/cmp-path' },
-    { 'saadparwaiz1/cmp_luasnip' },
-    { 'hrsh7th/cmp-nvim-lsp' },
-    { 'hrsh7th/cmp-nvim-lua' },
+    -- Completion
+    "hrsh7th/nvim-cmp",
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-path",
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/cmp-nvim-lua",
 
     -- Snippets
-    { 'L3MON4D3/LuaSnip' },
-    { 'rafamadriz/friendly-snippets' },
+    "L3MON4D3/LuaSnip",
+    "saadparwaiz1/cmp_luasnip",
+    "rafamadriz/friendly-snippets",
   },
 
   config = function()
-    -- LSP zero for formatting and actually attaching languag servers
-    local lsp_zero = require('lsp-zero')
-    lsp_zero.preset('recommended')
-
-    -- Fix Undefined global 'vim'
-    lsp_zero.configure('lua_ls', {
-      settings = {
-        Lua = {
-          diagnostics = {
-            globals = { 'vim' }
-          }
-        }
-      }
-    })
-
-    lsp_zero.set_preferences({
-      suggest_lsp_servers = true,
-      sign_icons = {
-        error = " ",
-        warn = " ",
-        hint = " ",
-        info = " "
-      }
-    })
-
-    vim.diagnostic.config({
-      virtual_text = {
-        prefix = '󰵙', -- Could be '●', '▎', 'x'
-      }
-    })
-
-    -- CMP stuff
-    -- need to set mapping that on Enter key, select auto completion
-    local cmp = require 'cmp'
-    local luasnip = require 'luasnip'
-
-    -- copilot tab completion
-    local has_words_before = function()
-      if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-      local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-      return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
-    end
-
-    cmp.setup({
-      mapping = {
-        ['<CR>'] = cmp.mapping.confirm({ select = false }),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-      },
-      sources = {
-        -- copilot
-        { name = "copilot" },
-        -- nvim lsp
-        { name = "nvim_lsp" },
-        { name = "path" },
-        { name = "luasnip" },
-
-        { name = "buffer" } -- use things locally if we can't get from an lsp source
-      }
-    })
-
-    lsp_zero.setup()
-
-    -- Mason for installing language servers
-    require("mason").setup(
-    )
+    require("mason").setup()
 
     local servers = {
       "lua_ls",
-      "pylsp",
-      "bashls",
-      "clangd",
       "rust_analyzer",
-      "ocamllsp",
-      "gopls",
-      "gdscript",
-      "eslint",
-      "ts_ls",
-      "ltex",
-      "texlab",
-      "html"
     }
 
-    require("mason-lspconfig").setup {
+    require("mason-lspconfig").setup({
       ensure_installed = servers,
       automatic_installation = true,
-    }
+    })
 
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    local lspconfig = require('lspconfig')
-    for _, ls in ipairs(servers) do
-      lspconfig[ls].setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-      }
-    end
-    lspconfig.pylsp.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-    }
-    -- I guess we also need to manually setup tsserver?
-    lspconfig.ts_ls.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-    }
-    -- lets do tailwind too!
-    lspconfig.tailwindcss.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-    }
-    -- lets do gdscipt as well!
-    lspconfig.gdscript.setup {
-      -- Set tab size to 4 for GDScript files
-      on_attach = function(_client, bufnr)
-        vim.api.nvim_buf_set_option(bufnr, 'expandtab', true)
-        vim.api.nvim_buf_set_option(bufnr, 'shiftwidth', 4)
-        vim.api.nvim_buf_set_option(bufnr, 'softtabstop', 4)
+    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+    vim.diagnostic.config({
+      virtual_text = {
+        prefix = "󰵙",
+      },
+    })
+
+    -- LSP keymaps
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(args)
+        local opts = { buffer = args.buf }
+
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+        vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+
+        vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+        vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+        vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
       end,
+    })
+
+    -- Lua
+    vim.lsp.config("lua_ls", {
       capabilities = capabilities,
-    }
-    -- we need to setup clangd manually
-    lspconfig.clangd.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      cmd = { "clangd", "--enable-config" },
-      root_dir = lspconfig.util.root_pattern("compile_commands.json", ".clangd"),
-    }
-    lspconfig.gopls.setup {
-      on_attach = function(_client, bufnr)
-        vim.api.nvim_buf_set_option(bufnr, 'expandtab', true)
-        vim.api.nvim_buf_set_option(bufnr, 'shiftwidth', 4)
-        vim.api.nvim_buf_set_option(bufnr, 'softtabstop', 4)
-      end,
-      capabilities = capabilities,
-    }
-    -- we need to setup rust manually:
-    lspconfig.rust_analyzer.setup {
-      on_attach = on_attach,
       settings = {
-        ['rust-analyzer'] = {
+        Lua = {
+          diagnostics = {
+            globals = { "vim" },
+          },
+        },
+      },
+    })
+
+    -- General servers
+    for _, server in ipairs({
+      "pylsp",
+    }) do
+      vim.lsp.config(server, {
+        capabilities = capabilities,
+      })
+    end
+
+--    -- C / C++
+--    vim.lsp.config("clangd", {
+--      capabilities = capabilities,
+--      cmd = {
+--        "clangd",
+--        "--enable-config",
+--      },
+--      root_markers = {
+--        "compile_commands.json",
+--        ".clangd",
+--        ".git",
+--      },
+--    })
+
+--    -- Go
+--    vim.lsp.config("gopls", {
+--      capabilities = capabilities,
+--      settings = {
+--        gopls = {},
+--      },
+--    })
+
+    -- Rust
+    vim.lsp.config("rust_analyzer", {
+      capabilities = capabilities,
+      settings = {
+        ["rust-analyzer"] = {
           diagnostics = {
             enable = false,
           },
-        }
-      }
-    }
-  end
+        },
+      },
+    })
 
+
+    -- Enable all configured servers
+    for _, server in ipairs(servers) do
+      vim.lsp.enable(server)
+    end
+  end,
 }

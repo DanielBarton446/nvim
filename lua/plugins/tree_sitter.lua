@@ -1,35 +1,15 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  config = function ()
-    local ts = require 'nvim-treesitter.configs'
-    ts.setup {
-    highlight = {
-      enable = true,
-      disable = {},
-    },
-    indent = {
-      enable = true,
-      disable = {},
-    },
-    ensure_installed = {
-      "javascript",
-      "typescript",
-      "python",
-      "rust",
-      "bash",
-      "c",
-      "toml",
-      "json",
-      "yaml",
-      "css",
-      "html",
-      "gdscript",
-      "lua"
-    },
-    autotag = {
-      enable = true,
-    },
-  }
-  end
+  branch = "main",
+  lazy = false,
+  build = ":TSUpdate",
 
+  config = function()
+    require("nvim-treesitter").setup()
+
+    require("nvim-treesitter").install({
+        "rust"
+    })
+
+  end,
 }
